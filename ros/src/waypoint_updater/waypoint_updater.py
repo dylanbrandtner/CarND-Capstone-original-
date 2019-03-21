@@ -47,13 +47,20 @@ class WaypointUpdater(object):
         self.waypoints = None
         self.redlight_wp_index = None
 
-        rospy.spin()
+        self.loop()
+
+    def loop(self):
+        rate = rospy.Rate(50) # 50Hz
+        while not rospy.is_shutdown():
+            if self.waypoints is not None:
+                self.publish()
+
+            rate.sleep()
 
     def pose_cb(self, msg):
         """ Callback for a position update """
         self.pos = msg.pose 
-        if self.waypoints is not None:                
-            self.publish()
+
 
     def waypoints_cb(self, msg):
         """ 
